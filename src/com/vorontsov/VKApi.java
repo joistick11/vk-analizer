@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -21,7 +22,10 @@ import java.util.logging.Logger;
  */
 public class VKApi {
     private static VKApi instance = null;
-    private final static String token = "6b7599ca2a269cb30af180720f8b580e1f46ef7a8c1017ec0fd1a6e34e4cc02b8ec92b3b5c407ee354083";
+    //https://oauth.vk.com/authorize?client_id=4763444&scope=13&redirect_uri=http://api.vkontakte.ru/blank.html&display=page&v=5.21&response_type=token
+    private final static String token = "2d04cc8aedeb4435c707f8e33e3a2ac64e6b4ee03bbdf048b6771e61eb35efcd268fb6373fbcda6573f5f";
+
+    private static JSONParser jsonParser = new JSONParser();
 
     private VKApi(){}
 
@@ -32,22 +36,33 @@ public class VKApi {
     }
 
     public List<User> getUsersFriends(int id){
-        String url = createURL("friends.get?user_id=" + id, "uid,first_name,last_name");
+        //System.out.println("[vkAPI] get friends for " + id);
+        String url = createURL("friends.get?user_id=" + id, "uid,first_name,last_name,city,domain");
         System.out.println("Created getFriendURL: " + url);
 
-        String JSONresponse = executeHttpRequest(url);
-
-        JSONParser parser = new JSONParser();
         List<User> friends = new LinkedList<>();
         try{
-            JSONObject jsonResp = (JSONObject) parser.parse(JSONresponse);
-            JSONArray postsList = (JSONArray) jsonResp.get("response");
-            for(Object tmp : postsList){
-                JSONObject userInfo = (JSONObject) tmp;
-                int userId = Integer.parseInt(userInfo.get("uid").toString());
-                String firstName = userInfo.get("first_name").toString();
-                String lastName = userInfo.get("last_name").toString();
-                friends.add(new User(userId, firstName, lastName));
+            String JSONresponse = executeHttpRequest(url);
+            if(JSONresponse == null)
+                return null;
+            //System.out.println("[vkAPI] JSON resp: " + JSONresponse);
+
+            JSONObject jsonResp = (JSONObject) jsonParser.parse(JSONresponse);
+            JSONObject items = (JSONObject) jsonResp.get("response");
+            if(items != null) {
+                JSONArray itemsList = (JSONArray) items.get("items");
+                for (Object tmp : itemsList) {
+                    JSONObject userInfo = (JSONObject) tmp;
+                    int userId = Integer.parseInt(userInfo.get("id").toString());
+                    String firstName = userInfo.get("first_name").toString();
+                    String lastName = userInfo.get("last_name").toString();
+                    String city = "Non specified";
+                    if (userInfo.get("city") != null){
+                        JSONObject cityObject = (JSONObject) userInfo.get("city");
+                        city = cityObject.get("title").toString();
+                    }
+                    friends.add(new User(userId, firstName, lastName, city));
+                }
             }
         }catch (ParseException e) {
             e.printStackTrace();
@@ -66,11 +81,10 @@ public class VKApi {
                 "users.get" +
                 "?fields=photo_50" + "&out=0" +
                 "&access_token=" + token;
-
-        String userIdJSON = executeHttpRequest(url);
-
-        JSONParser parser = new JSONParser();
         try{
+            String userIdJSON = executeHttpRequest(url);
+
+            JSONParser parser = new JSONParser();
             JSONObject jsonResp = (JSONObject) parser.parse(userIdJSON.toString());
             JSONArray postsList = (JSONArray) jsonResp.get("response");
             JSONObject userInfo = null;
@@ -91,14 +105,13 @@ public class VKApi {
     }
 
     public String createURL(String method, String parameters){
-        String url = "https://api.vk.com/method/" +
+        return "https://api.vk.com/method/" +
                 method +
-                "&fields=" + parameters + "&out=0" +
+                "&v=5.21&fields=" + parameters + "&out=0" +
                 "&access_token=" + token;
-        return url;
     }
 
-    private String executeHttpRequest(String url){
+    private String executeHttpRequest(String url) throws ParseException{
         BufferedReader reader = null;
         String response = "";
 
@@ -106,8 +119,6 @@ public class VKApi {
             URL query = new URL(url);
             reader = new BufferedReader(new InputStreamReader(query.openStream(), "utf-8"));
             response = reader.readLine();
-        }catch (MalformedURLException e){
-            e.printStackTrace();
         }catch (IOException e){
             e.printStackTrace();
         }finally{
@@ -117,6 +128,23 @@ public class VKApi {
                 }
             }catch(IOException ex){
                 Logger.getLogger(VKApi.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        JSONObject responseObj = (JSONObject) jsonParser.parse(response);
+        JSONObject error = null;
+        if( (error = (JSONObject) responseObj.get("error")) != null){
+            System.out.println();
+            // todo
+            // Error code may be different, was a case then thread sleeps for infinity
+            if( !"6".equals(error.get("error_code").toString())){
+                return null;
+            }
+            try {
+                Thread.sleep(200);
+                response = executeHttpRequest(url);
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
         }
 

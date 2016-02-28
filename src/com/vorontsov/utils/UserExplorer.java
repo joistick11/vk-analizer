@@ -4,7 +4,9 @@ import com.vorontsov.VKApi;
 import com.vorontsov.model.User;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Максим on 24.01.2016.
@@ -15,6 +17,7 @@ public class UserExplorer {
     private HashMap<Integer, User> processedUsers;
     private VKApi vkApi;
 
+    // todo remove singleton
     private static UserExplorer instance = new UserExplorer();
 
     public static UserExplorer getInstance() {
@@ -26,12 +29,28 @@ public class UserExplorer {
         processedUsers = new HashMap<>();
     }
 
+    /**
+     * @param startUserId userId to start with
+     * @return Map of users processed with specified depth
+     */
+    public HashMap<Integer, User> getUsersFriendsWithDepth(int startUserId){
+        return getUsersFriendsWithDepth(vkApi.getUserById(startUserId));
+    }
+
+    /**
+     * @param startUser user to start with
+     * @return Map of users processed with specified depth
+     */
     public HashMap<Integer, User> getUsersFriendsWithDepth(User startUser){
         processedUsers.put(startUser.getId(), startUser);
         getUsersFriends(startUser, 1);
         return getProcessedUsers();
     }
 
+    /**
+     * @param user user to get friends for
+     * @param currDepth current operation depth
+     */
     private void getUsersFriends(final User user, int currDepth){
         if(currDepth > depth)
             return;
@@ -57,6 +76,11 @@ public class UserExplorer {
 
     }
 
+    /**
+     * @param users users to analyze
+     * @param city a city to count users in
+     * @return percentage of people with specified city
+     */
     public float getFromCityPercentage(List<User> users, String city){
         if(users == null || users.size() == 0)
             return 0;
@@ -88,5 +112,17 @@ public class UserExplorer {
 
     public HashMap<Integer, User> getProcessedUsers() {
         return processedUsers;
+    }
+
+    public String getProcessedUsersAsString(){
+        String puString = "";
+        Iterator it = processedUsers.entrySet().iterator();
+        while (it.hasNext()){
+            Map.Entry pair = (Map.Entry) it.next();
+            User us = (User) pair.getValue();
+            puString += us.toString() + "\n";
+        }
+
+        return puString;
     }
 }

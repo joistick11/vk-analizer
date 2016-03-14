@@ -103,6 +103,20 @@ public class User {
         this.personal = personal;
     }
 
+    //todo refactor
+    public User(int id, String firstName, String lastName, String city, int sex, String bdate, int followersCount, int relation, Map personal, ArrayList<Integer> friendsIDs){
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.city = city;
+        this.sex = sex;
+        this.bdate = bdate;
+        this.followersCount = followersCount;
+        this.relation = relation;
+        this.personal = personal;
+        this.friendsIDs = friendsIDs;
+    }
+
     public int getId() {
         return id;
     }

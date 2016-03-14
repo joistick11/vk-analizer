@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class VKApi {
     private static VKApi instance = null;
     //https://oauth.vk.com/authorize?client_id=4763444&scope=13&redirect_uri=http://api.vkontakte.ru/blank.html&display=page&v=5.21&response_type=token
-    private final static String token = "245f998c8faf1bcb05eb724de9d1ef1172a836299625c5fb7eec10c78ed5018c78c3401f38d7751cf445e";
+    private final static String token = "94558733e3838b5cd23cf30881d5f098f81e3913e41ec7697588fa614b96141906955b671a4746c41e6ad";
 
     private static JSONParser jsonParser = new JSONParser();
 
@@ -116,7 +116,7 @@ public class VKApi {
         /*Data is not empty only when we got object, not array*/
         if(userInfo.get("personal") != null && userInfo.get("personal") instanceof JSONObject) {
             JSONObject personalData = (JSONObject) userInfo.get("personal");
-            if (personalData.get("political") != null)
+            if (personalData.get("political") != null && !personalData.get("political").toString().isEmpty())
                 personal.put("political", personalData.get("political").toString());
             if (personalData.get("langs") != null) {
                 String langsList = "";
@@ -156,19 +156,19 @@ public class VKApi {
         if(userInfo.get("can_write_private_message") != null)
             personal.put("can_write_private_message", userInfo.get("can_write_private_message").toString());
 
-        if(userInfo.get("music") != null)
+        if(userInfo.get("music") != null && !userInfo.get("music").toString().isEmpty())
             personal.put("music", userInfo.get("music").toString());
 
-        if(userInfo.get("movies") != null)
+        if(userInfo.get("movies") != null && !userInfo.get("movies").toString().isEmpty())
             personal.put("movies", userInfo.get("movies").toString());
 
-        if(userInfo.get("tv") != null)
+        if(userInfo.get("tv") != null && !userInfo.get("tv").toString().isEmpty())
             personal.put("tv", userInfo.get("tv").toString());
 
-        if(userInfo.get("books") != null)
+        if(userInfo.get("books") != null && !userInfo.get("books").toString().isEmpty())
             personal.put("books", userInfo.get("books").toString());
 
-        if(userInfo.get("games") != null)
+        if(userInfo.get("games") != null && !userInfo.get("games").toString().isEmpty())
             personal.put("games", userInfo.get("games").toString());
 
         return personal;

@@ -14,8 +14,9 @@ import java.util.Map;
 public class UserExplorer {
     private int depth;
     private String city = "Nizhny Novgorod";
-    private HashMap<Integer, User> processedUsers;
+    private HashMap<Integer, User> collectedUsers;
     private VKApi vkApi;
+    private int skipToDepth;
 
     // todo remove singleton
     private static UserExplorer instance = new UserExplorer();
@@ -26,7 +27,8 @@ public class UserExplorer {
 
     private UserExplorer() {
         vkApi = VKApi.getInstance();
-        processedUsers = new HashMap<>();
+        collectedUsers = new HashMap<>();
+        skipToDepth = 1;
     }
 
     /**
@@ -42,9 +44,9 @@ public class UserExplorer {
      * @return Map of users processed with specified depth
      */
     public HashMap<Integer, User> getUsersFriendsWithDepth(User startUser){
-        processedUsers.put(startUser.getId(), startUser);
+        collectedUsers.put(startUser.getId(), startUser);
         getUsersFriends(startUser, 1);
-        return getProcessedUsers();
+        return getCollectedUsers();
     }
 
     /**
@@ -64,11 +66,11 @@ public class UserExplorer {
                 if(friend.getCity() == null || !city.equals(friend.getCity())) {
                     /*List<User> doubtfulFriends = vkApi.getUsersFriends(friend.getId());
                     if(doubtfulFriends == null || doubtfulFriends.size() == 0 || getFromCityPercentage(doubtfulFriends, city) < 0.40 )*/
-                        continue;
+                    continue;
                 }
-                processedUsers.get(user.getId()).addFriend(friend.getId());
-                if (!getProcessedUsers().containsKey(friend.getId())) {
-                    processedUsers.put(friend.getId(), friend);
+                if (!collectedUsers.containsKey(friend.getId()) || depth <= skipToDepth) {
+                    collectedUsers.get(user.getId()).addFriend(friend.getId());
+                    collectedUsers.put(friend.getId(), friend);
                     getUsersFriends(friend, currDepth + 1);
                 }
             }
@@ -110,13 +112,13 @@ public class UserExplorer {
         this.city = city;
     }
 
-    public HashMap<Integer, User> getProcessedUsers() {
-        return processedUsers;
+    public HashMap<Integer, User> getCollectedUsers() {
+        return collectedUsers;
     }
 
-    public String getProcessedUsersAsString(){
+    public String getCollectedUsersAsString(){
         String puString = "";
-        Iterator it = processedUsers.entrySet().iterator();
+        Iterator it = getCollectedUsers().entrySet().iterator();
         while (it.hasNext()){
             Map.Entry pair = (Map.Entry) it.next();
             User us = (User) pair.getValue();
@@ -124,5 +126,13 @@ public class UserExplorer {
         }
 
         return puString;
+    }
+
+    public void setSkipToDepth(int skipToDepth){
+        this.skipToDepth = skipToDepth;
+    }
+
+    public void setCollectedUsers(HashMap<Integer, User> collectedUsers) {
+        this.collectedUsers = collectedUsers;
     }
 }

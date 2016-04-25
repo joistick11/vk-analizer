@@ -1,6 +1,7 @@
 package com.vorontsov;
 
 import com.vorontsov.model.User;
+import com.vorontsov.model.UserDetailed;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
 public class VKApi {
     private static VKApi instance = null;
     //https://oauth.vk.com/authorize?client_id=4763444&scope=13&redirect_uri=http://api.vkontakte.ru/blank.html&display=page&v=5.21&response_type=token
-    private final static String token = "94558733e3838b5cd23cf30881d5f098f81e3913e41ec7697588fa614b96141906955b671a4746c41e6ad";
+    private final static String token = "4432ee14d347b530d9c62034958a93f6886dd7cbc380d62ae8b87483bf4a88a80b0c9f019dac45787807b";
 
     private static JSONParser jsonParser = new JSONParser();
 
@@ -83,6 +84,14 @@ public class VKApi {
         }
 
         return friends;
+    }
+
+    public UserDetailed getDetailedUser(int id){
+        String url = createURL("users.get?user_id=" + id, "home_town,photo_max_orig,has_mobile,contacts,site,education,universities,schools," +
+                "status,counters,occupation,nickname,connections");
+        System.out.println(url);
+
+        return null;
     }
 
     /**
@@ -179,7 +188,7 @@ public class VKApi {
      * @param parameters request parameters
      * @return created url
      */
-    public String createURL(String method, String parameters){
+    private String createURL(String method, String parameters){
         return "https://api.vk.com/method/" +
                 method +
                 "&v=5.21&fields=" + parameters + "&out=0" +

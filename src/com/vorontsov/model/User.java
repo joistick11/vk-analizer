@@ -8,18 +8,18 @@ import java.util.Map;
  * Created by Максим on 21.01.2016.
  */
 public class User {
-    private int id;
-    private String firstName;
-    private String lastName;
-    private String city;
+    protected int id;
+    protected String firstName;
+    protected String lastName;
+    protected String city;
     /*
         1 - female
         2 - male
         0 - not specified
     */
-    private int sex;
-    private String bdate;
-    private int followersCount;
+    protected int sex;
+    protected String bdate;
+    protected int followersCount;
     /*
         1 – single
         2 – in a relationship
@@ -29,7 +29,7 @@ public class User {
         6 – actively searching
         7 – in love
     */
-    private int relation;
+    protected int relation;
     /*
         political:
             0 - not specified
@@ -86,10 +86,12 @@ public class User {
         interests
         activities
     */
-    private Map<String, String> personal;
-    private Map<String, Integer> numberOfContent;
+    protected Map<String, String> personal;
+    protected Map<String, Integer> numberOfContent;
 
-    private List<Integer> friendsIDs = new ArrayList<>();
+    protected List<Integer> friendsIDs = new ArrayList<>();
+
+    protected User(){}
 
     public User(int id, String firstName, String lastName, String city, int sex, String bdate, int followersCount, int relation, Map personal){
         this.id = id;

@@ -119,6 +119,10 @@ public class User {
         this.friendsIDs = friendsIDs;
     }
 
+    public User(User us){
+        this(us.getId(), us.getFirstName(), us.getLastName(), us.getCity(), us.getSex(), us.getBdate(), us.getFollowersCount(), us.getRelation(), us.getPersonal(), (ArrayList<Integer>) us.getFriendsIDs());
+    }
+
     public int getId() {
         return id;
     }

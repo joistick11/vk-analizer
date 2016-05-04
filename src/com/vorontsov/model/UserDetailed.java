@@ -9,17 +9,66 @@ import java.util.Map;
 public class UserDetailed extends User {
     String homeTown;
     String photo;
-    boolean hasMobile;
+    /**
+     * Does user have mobile on the page
+     */
+    int hasMobile;
+    /**
+     * mobile_phone, home_phone
+     */
     Map<String, String> contacts;
     String site;
+    /**
+     * university, university_name, faculty, faculty_name, graduation
+     */
     Map<String, String> education;
+    /**
+     * University -> id, country, city, name, faculty, faculty_name, chair, chair_name, graduation
+     */
     List<Map<String, String>> universities;
+    /**
+     * School -> id, country, city, name, year_from, year_to, year_graduated, class, speciality, type, type_str
+     */
     List<Map<String, String>> schools;
     String status;
+    /**
+     * Number of albums, videos, audios, notes, friends, groups, online_friends, user_videos
+     * todo add collection of this parameter
+     */
     Map<String, Integer> counters;
     String nickname;
+    /**
+     * name of service -> login name (ex. twitter -> maxvorontsov)
+     */
     Map<String, String> connections;
+    /**
+     * current user occupation (school, university or work)
+     * type -> "type of occupation",
+     * id -> "id of organization",
+     * name -> "name of organization"
+     */
     Map<String, String> occupation;
+
+    public UserDetailed(User user){
+        super(user);
+    }
+
+    public UserDetailed(User user, String homeTown, String photo, int hasMobile, Map contacts, String site, Map education, List universities, List schools, String status, Map counters, String nickname, Map connections, Map occupation){
+        super(user);
+        this.homeTown = homeTown;
+        this.photo = photo;
+        this.hasMobile = hasMobile;
+        this.contacts = contacts;
+        this.site = site;
+        this.education = education;
+        this.universities = universities;
+        this.schools = schools;
+        this.status = status;
+        this.counters = counters;
+        this.nickname = nickname;
+        this.connections = connections;
+        this.occupation = occupation;
+    }
 
     public String getHomeTown() {
         return homeTown;
@@ -37,20 +86,13 @@ public class UserDetailed extends User {
         this.photo = photo;
     }
 
-    /**
-     * Does user have mobile on the page
-     */
-    public boolean isHasMobile() {
+    public int isHasMobile() {
         return hasMobile;
     }
 
-    public void setHasMobile(boolean hasMobile) {
+    public void setHasMobile(int hasMobile) {
         this.hasMobile = hasMobile;
     }
-
-    /**
-     * mobile_phone, home_phone
-     */
     public Map<String, String> getContacts() {
         return contacts;
     }
@@ -67,9 +109,6 @@ public class UserDetailed extends User {
         this.site = site;
     }
 
-    /**
-     * university, university_name, faculty, faculty_name, graduation
-     */
     public Map<String, String> getEducation() {
         return education;
     }
@@ -78,9 +117,6 @@ public class UserDetailed extends User {
         this.education = education;
     }
 
-    /**
-     * University -> id, country, city, name, faculty, faculty_name, chair, chair_name, graduation
-     */
     public List<Map<String, String>> getUniversities() {
         return universities;
     }
@@ -89,9 +125,6 @@ public class UserDetailed extends User {
         this.universities = universities;
     }
 
-    /**
-     * School -> id, country, city, name, year_from, year_to, year_graduated, class, speciality, type, type_str
-     */
     public List<Map<String, String>> getSchools() {
         return schools;
     }
@@ -108,9 +141,6 @@ public class UserDetailed extends User {
         this.status = status;
     }
 
-    /**
-     * Number of albums, videos, audios, notes, friends, groups, online_friends, user_videos
-     */
     public Map<String, Integer> getCounters() {
         return counters;
     }
@@ -127,9 +157,6 @@ public class UserDetailed extends User {
         this.nickname = nickname;
     }
 
-    /**
-     * name of service -> login name (ex. twitter -> maxvorontsov)
-     */
     public Map<String, String> getConnections() {
         return connections;
     }

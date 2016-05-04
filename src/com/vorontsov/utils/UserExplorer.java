@@ -68,6 +68,7 @@ public class UserExplorer {
                     if(doubtfulFriends == null || doubtfulFriends.size() == 0 || getFromCityPercentage(doubtfulFriends, city) < 0.40 )*/
                     continue;
                 }
+                // todo add logic for skipping depth
                 if (!collectedUsers.containsKey(friend.getId()) || depth <= skipToDepth) {
                     collectedUsers.get(user.getId()).addFriend(friend.getId());
                     collectedUsers.put(friend.getId(), friend);

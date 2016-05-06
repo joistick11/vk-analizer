@@ -172,4 +172,31 @@ public class UserDetailed extends User {
     public void setOccupation(Map<String, String> occupation) {
         this.occupation = occupation;
     }
+
+    @Override
+    public String toString(){
+        return "ID=" + id +
+                "; firstName='" + firstName + '\'' +
+                "; lastName='" + lastName + "\'" +
+                "; city='" + getCity() + "\'" +
+                "; friends processed= " + friendsIDs.size() +
+                "; sex=" + getSex() +
+                "; bdate=" + getBdate() +
+                "; followers=" + getFollowersCount() +
+                "; relation=" + getRelation() +
+                "; personal=" + getPersonal() +
+                "; homeTown=" + homeTown +
+                "; photo=" + photo +
+                "; hasMobile=" + hasMobile +
+                "; contacts=" + contacts +
+                "; site=" + site +
+                "; education=" + education +
+                "; universities="+universities +
+                "; schools=" + schools +
+                "; status=" + status +
+                "; counters=" + counters +
+                "; nickname=" + nickname +
+                "; connections=" + connections +
+                "; occupation=" + occupation;
+    }
 }

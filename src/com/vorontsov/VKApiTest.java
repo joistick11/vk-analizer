@@ -15,43 +15,26 @@ import java.util.LinkedList;
  */
 public class VKApiTest {
     public static void main(String[] args) throws IOException{
-        //HashMap<Integer, User> usrs = XMLFactory.readUsersFromXML("P://vk-analizer//outputUsers1.xml");
-        //System.out.println("Read users: " + usrs.size());
+        final long startTime = System.currentTimeMillis();
 
-        /*UserExplorer usex = UserExplorer.getInstance();
-        //usex.setCollectedUsers(usrs);
-        usex.setDepth(1);
-        //usex.setSkipToDepth(3);
-
-        XMLFactory.writeUsersToXML(new LinkedList<>(users.values()), "P://vk-analizer//outputUsers2.xml");
-        System.out.println("Totally collected: " + users.size());
-        */
-
-        /*final long startTime = System.currentTimeMillis();
         UserExplorer usex = UserExplorer.getInstance();
-        usex.setCollectedUsers(XMLFactory.readUsersFromXML("P://vk-analizer//t1.xml"));
-        usex.setSkipToDepth(2);
-        usex.setDepth(2);
+        usex.setDepth(0);
         HashMap users = usex.getUsersFriendsWithDepth(87582268);
         System.out.println("\nProcessed users: " + usex.getCollectedUsers().size());
+
         final long endTime = System.currentTimeMillis();
-        System.out.println("Total execution time: " + (endTime - startTime)/1000 + "s" );*/
+        System.out.println("Total execution time: " + (endTime - startTime)/1000 + "s" );
 
-        //XMLFactory.writeUsersToXML(new LinkedList<>(users.values()), "P://vk-analizer//t1.xml");
-
-        HashMap<Integer, User> users = XMLFactory.readUsersFromXML("P://vk-analizer//outputUsers1.xml");
         UserDetailizer userDetailizer = new UserDetailizer();
-        HashMap<Integer, UserDetailed> usersDetailed = userDetailizer.getDetailedUsers(users);
-        System.out.println(usersDetailed);
+        HashMap userDetailed = userDetailizer.getDetailedUsers(users);
+        XMLFactory.writeUsersToXML(new LinkedList<>(userDetailed.values()), "P://vk-analizer//lol.xml", true);
+
+        HashMap usersRead = XMLFactory.readDetailedUsersFromXML("P://vk-analizer//lol.xml");
+        System.out.println(userDetailed);
+        System.out.println(usersRead);
+
+        //XMLFactory.writeUsersToXML(new LinkedList<>(users.values()), "P://vk-analizer//pizdec.xml");
 
 
-        //XMLFactory.writeUsersToXML(new LinkedList<>(usrs.values()), "P://vk-analizer//outputUsers2.xml");
-
-        /*BufferedWriter bw = new BufferedWriter(new FileWriter("P://testResults.txt"));
-        bw.write(usex.getProcessedUsersAsString());
-        bw.close();*/
-
-        /*System.out.println(vkApi.getUsersFriends(friends.get(5).getId()).size());*/
     }
-
 }

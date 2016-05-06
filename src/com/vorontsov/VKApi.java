@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 public class VKApi {
     private static VKApi instance = null;
     //https://oauth.vk.com/authorize?client_id=4763444&scope=13&redirect_uri=http://api.vkontakte.ru/blank.html&display=page&v=5.21&response_type=token
-    private final static String token = "67ac0f63a21163006034f271562548251995413496ac323ee277d870c68dd73a25fc487dddf461ae72696";
+    private final static String token = "047242e7ce962a788418d0cff7dee6ca2668de380f82b66c16691d44f78eb63f33130a9c908ecaafb473f";
     private boolean isDebugEnabled = true;
 
     private static JSONParser jsonParser = new JSONParser();
